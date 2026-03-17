@@ -1,35 +1,87 @@
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Scanner;
 
  class PalindromeChecker {
 
-    private static String normalize(String input) {
-        if (input == null) return "";
-        return input.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
-    }
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
 
-    private static boolean isPalindromeTwoPointer(String s) {
-        int left = 0, right = s.length() - 1;
-        while (left < right) {
-            if (s.charAt(left) != s.charAt(right)) return false;
-            left++;
-            right--;
+        System.out.println("=== UC12: Strategy Pattern for Palindrome Algorithms ===");
+        System.out.print("Enter a string: ");
+        String input = sc.nextLine();
+
+        System.out.println("Choose strategy:");
+        System.out.println("1) Stack Strategy");
+        System.out.println("2) Deque Strategy");
+        System.out.print("Enter choice (1/2): ");
+        String choice = sc.nextLine().trim();
+
+        PalindromeStrategy strategy;
+        if ("2".equals(choice)) {
+            strategy = new DequeStrategy();
+        } else {
+            strategy = new StackStrategy();
+        }
+
+        boolean result = strategy.isPalindrome(input);
+
+        System.out.println("Strategy Used: " + strategy.name());
+        System.out.println("Result: " + (result ? "Palindrome ✅" : "Not a Palindrome ❌"));
+
+        sc.close();
+    }
+}
+
+interface PalindromeStrategy {
+    boolean isPalindrome(String input);
+    String name();
+}
+
+class StackStrategy implements PalindromeStrategy {
+
+    @Override
+    public boolean isPalindrome(String input) {
+        if (input == null) return false;
+
+        Deque<Character> stack = new ArrayDeque<>();
+        for (int i = 0; i < input.length(); i++) {
+            stack.push(input.charAt(i));
+        }
+
+        for (int i = 0; i < input.length(); i++) {
+            if (stack.pop() != input.charAt(i)) return false;
         }
         return true;
     }
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
+    @Override
+    public String name() {
+        return "StackStrategy";
+    }
+}
 
-        System.out.println("=== UC10: Case-Insensitive & Space-Ignored Palindrome ===");
-        System.out.print("Enter a string: ");
-        String input = sc.nextLine();
+class DequeStrategy implements PalindromeStrategy {
 
-        String normalized = normalize(input);
-        boolean result = isPalindromeTwoPointer(normalized);
+    @Override
+    public boolean isPalindrome(String input) {
+        if (input == null) return false;
 
-        System.out.println("Normalized: " + normalized);
-        System.out.println("Result: " + (result ? "Palindrome ✅" : "Not a Palindrome ❌"));
+        Deque<Character> deque = new ArrayDeque<>();
+        for (int i = 0; i < input.length(); i++) {
+            deque.addLast(input.charAt(i));
+        }
 
-        sc.close();
+        while (deque.size() > 1) {
+            char front = deque.removeFirst();
+            char back = deque.removeLast();
+            if (front != back) return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String name() {
+        return "DequeStrategy";
     }
 }
