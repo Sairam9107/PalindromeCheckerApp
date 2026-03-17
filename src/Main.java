@@ -1,32 +1,35 @@
+import java.util.Scanner;
+
  class PalindromeChecker {
 
-    public static void uc9_RecursiveMethod() {
-        String input = "racecar";
-
-        // Calling the recursive helper function
-        boolean isPalindrome = isPalindromeRecursive(input, 0, input.length() - 1);
-
-        System.out.println("UC9 Input : " + input);
-        System.out.println("Is Palindrome? : " + isPalindrome + "\n");
+    private static String normalize(String input) {
+        if (input == null) return "";
+        return input.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
     }
 
-    // The recursive helper method
-    public static boolean isPalindromeRecursive(String str, int start, int end) {
-        // Base Case: If pointers meet or cross, it's a palindrome
-        if (start >= end) {
-            return true;
+    private static boolean isPalindromeTwoPointer(String s) {
+        int left = 0, right = s.length() - 1;
+        while (left < right) {
+            if (s.charAt(left) != s.charAt(right)) return false;
+            left++;
+            right--;
         }
-
-        // Check if characters at current pointers match
-        if (str.charAt(start) != str.charAt(end)) {
-            return false;
-        }
-
-        // Recursive Step: Move pointers inward
-        return isPalindromeRecursive(str, start + 1, end - 1);
+        return true;
     }
 
     public static void main(String[] args) {
-        uc9_RecursiveMethod();
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("=== UC10: Case-Insensitive & Space-Ignored Palindrome ===");
+        System.out.print("Enter a string: ");
+        String input = sc.nextLine();
+
+        String normalized = normalize(input);
+        boolean result = isPalindromeTwoPointer(normalized);
+
+        System.out.println("Normalized: " + normalized);
+        System.out.println("Result: " + (result ? "Palindrome ✅" : "Not a Palindrome ❌"));
+
+        sc.close();
     }
 }
