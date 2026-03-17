@@ -18,7 +18,7 @@
  * @author Developer
  * @version 1.0
  */
-class UseCase1PalindromeCheckerApp {
+ class UseCase1PalindromeCheckerApp {
     /**
      * Application entry point.
      *
