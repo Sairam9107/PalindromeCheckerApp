@@ -1,35 +1,67 @@
-import java.util.ArrayDeque;
-import java.util.Deque;
+class Node {
+    char data;
+    Node next;
 
- class PalindromeChecker
-{public static void main(String[] args)
-{
-    uc7_DequeMethod();
+    Node(char data) {
+        this.data = data;
+        this.next = null;
+    }
 }
-    public static void uc7_DequeMethod() {
 
-        String input = "refer";
+ class PalindromeChecker {
+    public static void uc8_LinkedListMethod() {
+        String input = "madam";
 
-        Deque<Character> deque = new ArrayDeque<>();
-
-        // Insert characters into deque
+        // 1. Convert string to linked list
+        Node head = null, tail = null;
         for (char c : input.toCharArray()) {
-            deque.add(c);
-        }
-
-        boolean isPalindrome = true;
-
-        // Compare front and rear
-        while (deque.size() > 1) {
-
-            if (!deque.removeFirst().equals(deque.removeLast())) {
-                isPalindrome = false;
-                break;
+            Node newNode = new Node(c);
+            if (head == null) {
+                head = tail = newNode;
+            } else {
+                tail.next = newNode;
+                tail = newNode;
             }
         }
 
-        System.out.println("UC7: Deque-Based Optimized Palindrome Checker");
-        System.out.println("Input : " + input);
+        // 2. Find middle using slow & fast pointers
+        //
+        Node slow = head, fast = head;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        // 3. Reverse second half
+        //
+        Node prev = null;
+        Node current = slow;
+        while (current != null) {
+            Node nextTemp = current.next;
+            current.next = prev;
+            prev = current;
+            current = nextTemp;
+        }
+
+        // 4. Compare both halves
+        Node first = head;
+        Node second = prev; // 'prev' is now the head of the reversed second half
+        boolean isPalindrome = true;
+
+        while (second != null) {
+            if (first.data != second.data) {
+                isPalindrome = false;
+                break;
+            }
+            first = first.next;
+            second = second.next;
+        }
+
+        System.out.println("UC8 Input : " + input);
         System.out.println("Is Palindrome? : " + isPalindrome);
-        System.out.println();
-    }}
+    }
+
+    public static void main(String[] args) {
+        uc8_LinkedListMethod();
+    }
+}
